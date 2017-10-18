@@ -27,7 +27,12 @@ public class Inquisitor implements IInquisitor {
      */
     public void addEngine (IEngine engine) {
 
-        this.engines.add(engine);
+        if (engine.initialize()) {
+            
+            this.engines.add(engine);
+        }
+        
+        //TODO else fire warning
     }
 
     @Override

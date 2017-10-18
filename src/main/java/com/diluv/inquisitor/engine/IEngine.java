@@ -28,4 +28,12 @@ public interface IEngine {
      * @return
      */
     List<IReport> scanFile (File file);
+
+    /**
+     * Initializes the engine. If the engine can not be initialized, this should return false.
+     * Failing to initialized should prevent the engine from being used.
+     *
+     * @return Whether or not the engine could be initialized.
+     */
+    boolean initialize ();
 }

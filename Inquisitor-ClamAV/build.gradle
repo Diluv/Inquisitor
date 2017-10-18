@@ -1,3 +1,8 @@
 group = ext.project_group
 archivesBaseName = ext.project_name
 description = 'An Inquisitor addon that provides ClamAV support.'
+
+dependencies {
+	
+    compile group: 'fi.solita.clamav', name: 'clamav-client', version: '1.0.1'
+}

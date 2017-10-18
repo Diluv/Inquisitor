@@ -1,0 +1,65 @@
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'idea'
+
+    version = ext.project_version + "." + getBuildNumber()
+
+    if (JavaVersion.current().isJava8Compatible()) {
+        allprojects {
+            tasks.withType(Javadoc) {
+                options.addStringOption('Xdoclint:none', '-quiet')
+            }
+        }
+    }
+
+    //TODO Consider a better approach
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "file:///var/www/html/maven")
+            }
+        }
+    }
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        description = 'Creates a jar file containing the sources for the project in the build directory.'
+        from sourceSets.main.allSource
+        classifier = 'sources'
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        description = 'Creates a jar file containing the javadocs for the project in the build directory.'
+        from javadoc.destinationDir
+        classifier = 'javadoc'
+    }
+
+    task buildJar(type: Jar) {
+        description = 'Creates a standard jar file containing the compiled java classes for this library.'
+        from sourceSets.main.output
+    }
+
+    artifacts {
+        archives buildJar
+        archives sourcesJar
+        archives javadocJar
+    }
+}
+
+group = ext.project_group
+archivesBaseName = ext.project_name
+description = 'A Java library for interacting with multiple malware engines.'
+
+// Gradle code shared by sub projects
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile rootProject
+    }
+}
+
+String getBuildNumber() {
+    return System.getenv('BUILD_NUMBER') ?: System.getenv('TRAVIS_BUILD_NUMBER') ?: '0'
+}

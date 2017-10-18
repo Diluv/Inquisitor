@@ -1,0 +1,3 @@
+group = ext.project_group
+archivesBaseName = ext.project_name
+description = 'An Inquisitor addon that provides ClamAV support.'

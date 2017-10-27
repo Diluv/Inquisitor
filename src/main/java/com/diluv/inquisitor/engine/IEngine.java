@@ -1,6 +1,8 @@
 package com.diluv.inquisitor.engine;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import com.diluv.inquisitor.report.IReport;
@@ -27,7 +29,7 @@ public interface IEngine {
      * @param file
      * @return
      */
-    List<IReport> scanFile (File file);
+    List<IReport> scanFile (File file) throws Exception;
 
     /**
      * Initializes the engine. If the engine can not be initialized, this should return false.

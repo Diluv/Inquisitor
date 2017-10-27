@@ -2,6 +2,8 @@ package net.diluv.inquisitor.clamav;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -79,26 +81,17 @@ public class EngineClamAV implements IEngine {
     }
 
     @Override
-    public List<IReport> scanFile (File file) {
+    public List<IReport> scanFile (File file) throws IOException {
 
         final List<IReport> reports = new ArrayList<>();
 
-        try {
+        final byte[] rawReply = this.client.scan(new FileInputStream(file));
 
-            final byte[] rawReply = this.client.scan(new FileInputStream(file));
+        if (!Arrays.equals(OKAY_SIGNATURE, rawReply)) {
 
-            if (!Arrays.equals(OKAY_SIGNATURE, rawReply)) {
-
-                final String reply = new String(rawReply, StandardCharsets.US_ASCII);
-                final String type = reply.substring(8, reply.length() - 7);
-                reports.add(new Report(this.getEngineName(), type, "The " + type + " malware was detected.", file));
-            }
-        }
-
-        catch (final Exception e) {
-
-            e.printStackTrace();
-
+            final String reply = new String(rawReply, StandardCharsets.US_ASCII);
+            final String type = reply.substring(8, reply.length() - 7);
+            reports.add(new Report(this.getEngineName(), type, "The " + type + " malware was detected.", file));
         }
 
         return reports;
@@ -110,10 +103,10 @@ public class EngineClamAV implements IEngine {
         try {
 
             this.client = new ClamAVClient(this.ip, this.port, this.timeout);
-            return true;
+            return this.client.ping();
         }
 
-        catch (final IllegalArgumentException e) {
+        catch (final IllegalArgumentException | IOException e) {
 
             e.printStackTrace();
             return false;

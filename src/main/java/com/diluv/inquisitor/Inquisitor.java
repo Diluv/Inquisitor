@@ -36,7 +36,7 @@ public class Inquisitor implements IInquisitor {
     }
 
     @Override
-    public List<IReport> scanFile (File file) {
+    public List<IReport> scanFile (File file) throws Exception {
 
         final List<IReport> reports = new ArrayList<>();
 

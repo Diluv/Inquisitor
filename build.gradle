@@ -3,7 +3,7 @@ allprojects {
     apply plugin: 'maven'
     apply plugin: 'idea'
 
-    version = ext.project_version + "." + getBuildNumber()
+    version = ext.project_version + "." + getBuildNumber() + (gitBranch() == "development" ? "-SNAPSHOT" : "")
 
     if (JavaVersion.current().isJava8Compatible()) {
         allprojects {
@@ -13,14 +13,14 @@ allprojects {
         }
     }
 
-    //TODO Consider a better approach
     uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: "file:///var/www/html/maven")
+                repository(url: "file:///var/www/maven.diluv.io")
             }
         }
     }
+
     task sourcesJar(type: Jar, dependsOn: classes) {
         description = 'Creates a jar file containing the sources for the project in the build directory.'
         from sourceSets.main.allSource
@@ -52,7 +52,7 @@ description = 'A Java library for interacting with multiple malware engines.'
 // Gradle code shared by sub projects
 subprojects {
     repositories {
-        mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -61,13 +61,21 @@ subprojects {
 }
 
 repositories {
-
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
-
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+}
+
+
+def gitBranch() {
+    def branch = ""
+    def proc = "git rev-parse --abbrev-ref HEAD".execute()
+    proc.in.eachLine { line -> branch = line }
+    proc.err.eachLine { line -> println line }
+    proc.waitFor()
+    branch
 }
     
 String getBuildNumber() {

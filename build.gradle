@@ -43,6 +43,14 @@ allprojects {
         archives sourcesJar
         archives javadocJar
     }
+
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    }
 }
 
 group = ext.project_group
@@ -51,23 +59,10 @@ description = 'A Java library for interacting with multiple malware engines.'
 
 // Gradle code shared by sub projects
 subprojects {
-    repositories {
-        jcenter()
-    }
-
     dependencies {
         compile rootProject
     }
 }
-
-repositories {
-    jcenter()
-}
-
-dependencies {
-    compile group: 'commons-io', name: 'commons-io', version: '2.5'
-}
-
 
 def gitBranch() {
     def branch = ""

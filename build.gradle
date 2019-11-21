@@ -34,8 +34,8 @@ allprojects {
     }
 }
 
-group = 'com.diluv.inquisitor'
-archivesBaseName = 'Inquisitor'
+group = "${project_group}"
+archivesBaseName = "${project_name}"
 description = 'A Java library for interacting with multiple malware engines.'
 
 dependencies {

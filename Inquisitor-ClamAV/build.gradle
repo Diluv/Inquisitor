@@ -1,5 +1,5 @@
-group = 'com.diluv.inquisitor'
-archivesBaseName = 'Inquisitor-ClamAV'
+group = "${project_group}"
+archivesBaseName = "${project_name}"
 description = 'An Inquisitor addon that provides ClamAV support.'
 
 repositories {

@@ -2,7 +2,6 @@ package net.diluv.inquisitor.clamav;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.List;
 import com.diluv.inquisitor.engine.IEngine;
 import com.diluv.inquisitor.report.IReport;
 import com.diluv.inquisitor.report.Report;
-
 import fi.solita.clamav.ClamAVClient;
 
 /**
@@ -26,7 +24,7 @@ public class EngineClamAV implements IEngine {
     /**
      * A byte array that should match with any okay/clean file.
      */
-    private static final byte[] OKAY_SIGNATURE = new byte[] { 115, 116, 114, 101, 97, 109, 58, 32, 79, 75, 0 };
+    private static final byte[] OKAY_SIGNATURE = new byte[]{115, 116, 114, 101, 97, 109, 58, 32, 79, 75, 0};
 
     /**
      * The IP of the server being connected to.
@@ -65,7 +63,7 @@ public class EngineClamAV implements IEngine {
      * @param ip The IP of the server to connect to.
      * @param port The port of the server to connect to.
      * @param timeout The time to wait for a response. Setting to 0 will make this time
-     *        infinite.
+     *     infinite.
      */
     public EngineClamAV (String ip, int port, int timeout) {
 

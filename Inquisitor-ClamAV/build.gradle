@@ -1,8 +1,14 @@
-group = ext.project_group
-archivesBaseName = ext.project_name
+group = 'com.diluv.inquisitor'
+archivesBaseName = 'Inquisitor-ClamAV'
 description = 'An Inquisitor addon that provides ClamAV support.'
 
+repositories {
+    jcenter {
+        url 'https://hmrc.bintray.com/releases/'
+    }
+}
+
 dependencies {
-	
+    compile rootProject
     compile group: 'fi.solita.clamav', name: 'clamav-client', version: '1.0.1'
 }

@@ -28,10 +28,10 @@ public class Inquisitor implements IInquisitor {
     public void addEngine (IEngine engine) {
 
         if (engine.initialize()) {
-            
+
             this.engines.add(engine);
         }
-        
+
         //TODO else fire warning
     }
 

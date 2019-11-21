@@ -1,8 +1,6 @@
 package com.diluv.inquisitor.engine;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import com.diluv.inquisitor.report.IReport;

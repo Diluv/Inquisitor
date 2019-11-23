@@ -29,7 +29,7 @@ public interface IReport {
      * Gets the full on description of the report. This can be used to provide further details
      * about any malware that may have been found.
      *
-     * @return
+     * @return The description of the report
      */
     String getDescription ();
 

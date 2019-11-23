@@ -24,8 +24,9 @@ public interface IEngine {
     /**
      * Called when the engine is requested to scan a file. The return results will be added to
      *
-     * @param file
-     * @return
+     * @param file The file that is being scanned
+     * @return A list of reports generated for the file.
+     * @throws Exception Throws an exception if an error occurs while processing the file.
      */
     List<IReport> scanFile (File file) throws Exception;
 

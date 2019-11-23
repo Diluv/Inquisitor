@@ -18,6 +18,7 @@ public interface IInquisitor {
      *
      * @param file The file to scan.
      * @return A list of reports generated for the file.
+     * @throws Exception Throws an exception if an error occurs while processing the file.
      */
     List<IReport> scanFile (File file) throws Exception;
 }

@@ -1,5 +1,11 @@
+plugins {
+    id 'io.codearte.nexus-staging' version '0.21.1'
+}
+
 allprojects {
-    apply plugin: 'java'
+    apply plugin: "java"
+    apply plugin: 'maven'
+    apply plugin: 'signing'
 
     version = "${project_version}" + getBuildNumber() + isSnapshot()
 
@@ -10,27 +16,85 @@ allprojects {
         jcenter()
     }
 
-    task buildJar(type: Jar) {
-        description = 'Creates a standard jar file containing the compiled java classes for this library.'
-        from sourceSets.main.output
-    }
-
     task sourcesJar(type: Jar, dependsOn: classes) {
-        description = 'Creates a jar file containing the sources for the project in the build directory.'
         from sourceSets.main.allSource
         archiveClassifier = 'sources'
     }
 
     task javadocJar(type: Jar, dependsOn: javadoc) {
-        description = 'Creates a jar file containing the javadocs for the project in the build directory.'
         from javadoc.destinationDir
         archiveClassifier = 'javadoc'
     }
 
     artifacts {
-        archives buildJar
         archives sourcesJar
         archives javadocJar
+    }
+
+    jar {
+        manifest {
+            attributes([
+                'Timestamp'               : System.currentTimeMillis(),
+                'Specification-Title'     : "${archivesBaseName}",
+                'Specification-Vendor'    : "Diluv",
+                'Specification-Version'   : "${archiveVersion}",
+                'Implementation-Title'    : "${archivesBaseName}",
+                'Implementation-Version'  : "${archiveVersion}",
+                'Implementation-Vendor'   : "Diluv",
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})"
+            ])
+        }
+    }
+
+    signing {
+        useGpgCmd()
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                    authentication(userName: System.getenv("OSSRH_USERNAME"), password: System.getenv("OSSRH_PASSWORD"))
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: System.getenv("OSSRH_USERNAME"), password: System.getenv("OSSRH_PASSWORD"))
+                }
+
+                pom.project {
+
+                    name "${archivesBaseName}"
+                    packaging 'jar'
+                    description project.description
+                    url 'https://github.com/Diluv/Inquisitor/'
+
+                    scm {
+                        connection 'scm:git:git://github.com/Diluv/Inquisitor.git'
+                        developerConnection 'scm:git:ssh://github.com/Diluv/Inquisitor.git'
+                        url 'https://github.com/Diluv/Inquisitor'
+                    }
+
+                    licenses {
+                        license {
+                            name 'GNU Lesser General Public License v2.1'
+                            url 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'lclc98'
+                            name 'lclc98'
+                            email 'lclc98@lclc98.com'
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -42,11 +106,20 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
 }
 
+nexusStaging {
+    stagingProfileId = '1282c5e0d73bd2'
+    username = System.getenv("OSSRH_USERNAME")
+    password = System.getenv("OSSRH_PASSWORD")
+}
+
 static String getBuildNumber() {
     return System.getenv("BUILD_NUMBER") ?: "0"
 }
 
-//TODO Not implemented
 static String isSnapshot() {
-    return System.getenv("TRAVIS_TAG") ? "" : "-snapshot"
+    String ref = System.getenv("GITHUB_REF");
+    if (ref != null && ref.startsWith("refs/tags/v")) {
+        return ""
+    }
+    return "-snapshot"
 }

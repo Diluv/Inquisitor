@@ -46,10 +46,20 @@ allprojects {
             ])
         }
     }
+    gradle.taskGraph.whenReady { taskGraph ->
+        if (System.getenv("GPG_KEYNAME")) {
+            println "Configuring GPG KEY NAME"
+            ext."signing.gnupg.keyName" = System.getenv("GPG_KEYNAME");
+        }
+    }
 
     signing {
         useGpgCmd()
         sign configurations.archives
+    }
+
+    tasks.withType(Sign) {
+        onlyIf { isSnapshot() == '' }
     }
 
     uploadArchives {

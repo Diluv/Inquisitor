@@ -58,10 +58,6 @@ allprojects {
         sign configurations.archives
     }
 
-    tasks.withType(Sign) {
-        onlyIf { isSnapshot() == '' }
-    }
-
     uploadArchives {
         repositories {
             mavenDeployer {

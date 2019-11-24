@@ -37,9 +37,9 @@ allprojects {
                 'Timestamp'               : System.currentTimeMillis(),
                 'Specification-Title'     : "${archivesBaseName}",
                 'Specification-Vendor'    : "Diluv",
-                'Specification-Version'   : "${archiveVersion}",
+                'Specification-Version'   : "${archiveVersion.getOrNull()}",
                 'Implementation-Title'    : "${archivesBaseName}",
-                'Implementation-Version'  : "${archiveVersion}",
+                'Implementation-Version'  : "${archiveVersion.getOrNull()}",
                 'Implementation-Vendor'   : "Diluv",
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})"
